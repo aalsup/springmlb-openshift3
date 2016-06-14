@@ -14,16 +14,16 @@ public class ApplicationConfig {
 
 	@Bean
     public MongoTemplate mongoTemplate() throws Exception {
-        String openshiftMongoDbHost = System.getenv("OPENSHIFT_MONGODB_DB_HOST");
+        String openshiftMongoDbHost = System.getenv("MONGODB_HOST");
         if(openshiftMongoDbHost == null){
         	return new MongoTemplate(new Mongo(), "springmlb");
         }
-        int openshiftMongoDbPort = Integer.parseInt(System.getenv("OPENSHIFT_MONGODB_DB_PORT"));
-        String username = System.getenv("OPENSHIFT_MONGODB_DB_USERNAME");
-        String password = System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD");
+        int openshiftMongoDbPort = 27017;
+        String username = System.getenv("MONGODB_USER");
+        String password = System.getenv("MONGODB_PASSWORD");
         Mongo mongo = new Mongo(openshiftMongoDbHost, openshiftMongoDbPort);
         UserCredentials userCredentials = new UserCredentials(username, password);
-        String databaseName = System.getenv("OPENSHIFT_APP_NAME");
+        String databaseName = System.getenv("MONGODB_DATABASE");
         MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(mongo, databaseName, userCredentials);
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory);
         return mongoTemplate;
